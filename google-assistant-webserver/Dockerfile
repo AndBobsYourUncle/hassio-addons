@@ -13,15 +13,10 @@ RUN apt-get update \
     && apt-get clean -y \
     && rm -rf /var/lib/apt/lists/*
 
-VOLUME /data
-
 # Copy data
 COPY run.sh /
 COPY *.py /
 
 RUN chmod a+x /run.sh
-
-# Copy dev client json
-COPY client.json /data/client.json
 
 ENTRYPOINT [ "/run.sh" ]
