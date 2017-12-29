@@ -19,5 +19,6 @@
   },
   "schema": {
     "client_secrets": "str"
-  }
+  },
+  "image": "AndBobsYourUncle/{arch}-google-assistant-webserver"
 }
