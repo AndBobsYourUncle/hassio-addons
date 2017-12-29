@@ -2,7 +2,7 @@
   "name": "Google Assistant Webserver",
   "version": "0.0.1",
   "slug": "google_assistant_webserver",
-  "description": "A virtual personal assistant developed by Google (text input via webserver). Once running and authenticated, you can send a GET request to http://[HOST]:5000/broadcast=[MESSAGE] to broadcast a text message to all your Google Assistants.",
+  "description": "A virtual personal assistant developed by Google (text input via webserver). Once running and authenticated, you can send a GET request to http://hassio.local:5000/broadcast_message?message=[MESSAGE] to broadcast a text message to all your Google Assistants.",
   "url": "https://github.com/AndBobsYourUncle/hassio-addons/",
   "startup": "application",
   "boot": "auto",
