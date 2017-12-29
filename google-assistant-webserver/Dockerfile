@@ -1,5 +1,5 @@
-# Only works with ARM7 devices such as a Raspberry Pi
-FROM multiarch/debian-debootstrap:armhf-stretch
+ARG BUILD_FROM
+FROM $BUILD_FROM
 
 # Install packages
 RUN apt-get update \
