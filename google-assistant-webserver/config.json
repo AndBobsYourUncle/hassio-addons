@@ -20,5 +20,5 @@
   "schema": {
     "client_secrets": "str"
   },
-  "image": "hub/{arch}-google-assistant-webserver"
+  "image": "andbobsyouruncle/{arch}-google-assistant-webserver"
 }
