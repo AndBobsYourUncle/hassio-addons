@@ -32,7 +32,15 @@ class BroadcastMessage(Resource):
         display_text = assistant.assist(text_query=text_query)
         return {'status': 'OK'}
 
+class StandardMessage(Resource):
+    def get(self):
+        message = request.args.get('message', default = 'This is a test!')
+        text_query = message
+        display_text = assistant.assist(text_query=text_query)
+        return {'status': 'OK'}
+    
 api.add_resource(BroadcastMessage, '/broadcast_message')
+api.add_resource(StandardMessage, '/standard_message')
 
 class Command(Resource):
     def get(self):
