@@ -129,7 +129,7 @@ class GoogleTextAssistant(object):
                 conversation_state = resp.dialog_state_out.conversation_state
                 self.conversation_state = conversation_state
             if resp.dialog_state_out.supplemental_display_text:
-                text_response = resp.dialog_state_out.supplemental_display_text()
+                text_response = resp.dialog_state_out.supplemental_display_text
         return text_response, html_response
 
 if __name__ == '__main__':
