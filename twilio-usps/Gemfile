@@ -1,0 +1,7 @@
+source 'https://rubygems.org'
+
+# Sinatra
+gem 'sinatra'
+gem 'puma'
+gem 'rack-conneg'
+gem 'json'
