@@ -18,17 +18,17 @@ require "googleauth"
 require "googleauth/stores/file_token_store"
 require "fileutils"
 
+file = File.read(OPTIONS_FILE)
+options_json = JSON.parse(file)
+
 OPTIONS_FILE = if Sinatra::Base.production?
   '/data/options.json'
 else
   'options.json'
 end
 
-file = File.read(OPTIONS_FILE)
-options_json = JSON.parse(file)
-
-OOB_URI = "https://serveraddress".freeze
-APPLICATION_NAME = "Home Assistant USPS Tracker".freeze
+OOB_URI = "https://#{ENV['HOST']}".freeze
+APPLICATION_NAME = options_json['project_id'].freeze
 CREDENTIALS_PATH = options_json['client_secrets'].freeze
 # The file token.yaml stores the user's access and refresh tokens, and is
 # created automatically when the authorization flow completes for the first
@@ -40,7 +40,6 @@ else
 end
 
 SCOPE = Google::Apis::GmailV1::AUTH_GMAIL_READONLY
-
 
 # service = Google::Apis::GmailV1::GmailService.new
 # service.client_options.application_name = APPLICATION_NAME

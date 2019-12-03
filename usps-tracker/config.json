@@ -12,6 +12,7 @@
     "9005/tcp": 9005
   },
   "options": {
+    "project_id": "google-project-id-123456789",
     "client_secrets": "usps-tracker-credentials.json"
   },
   "schema": {
