@@ -4,6 +4,7 @@ require 'bundler'
 Bundler.require
 
 require 'sinatra'
+require 'rufus/scheduler'
 require 'rack/conneg'
 
 scheduler = Rufus::Scheduler.new
