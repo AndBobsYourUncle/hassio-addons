@@ -1,4 +1,3 @@
-# Encoding: utf-8
 require 'rubygems'
 require 'bundler'
 
@@ -6,6 +5,12 @@ Bundler.require
 
 require 'sinatra'
 require 'rack/conneg'
+
+scheduler = Rufus::Scheduler.new
+
+scheduler.every '2s' do
+  puts 'heh heh'
+end
 
 configure do
   set :server, :puma # default to puma for performance

@@ -1,0 +1,15 @@
+{
+  "name": "USPS Package Tracker",
+  "version": "0.0.1",
+  "slug": "usps-tracker",
+  "description": "This addon spins up a simple Ruby server that logs in and downloads emails from the USPS Informed Delivery service, and manages a list of incoming packages.",
+  "arch": ["armhf", "armv7", "aarch64", "amd64", "i386"],
+  "startup": "before",
+  "boot": "auto",
+  "options": {},
+  "schema": {},
+  "ports": {
+    "9005/tcp": 9005
+  },
+  "image": "andbobsyouruncle/{arch}-usps-tracker"
+}
