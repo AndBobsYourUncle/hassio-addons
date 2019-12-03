@@ -28,12 +28,17 @@ file = File.read(OPTIONS_FILE)
 options_json = JSON.parse(file)
 
 OOB_URI = "https://serveraddress".freeze
-APPLICATION_NAME = "Home Assistant".freeze
+APPLICATION_NAME = "Home Assistant USPS Tracker".freeze
 CREDENTIALS_PATH = options_json['client_secrets'].freeze
 # The file token.yaml stores the user's access and refresh tokens, and is
 # created automatically when the authorization flow completes for the first
 # time.
-TOKEN_PATH = "token.yaml".freeze
+TOKEN_PATH = if Sinatra::Base.production?
+  "/data/token.yaml".freeze
+else
+  "token.yaml".freeze
+end
+
 SCOPE = Google::Apis::GmailV1::AUTH_GMAIL_READONLY
 
 
