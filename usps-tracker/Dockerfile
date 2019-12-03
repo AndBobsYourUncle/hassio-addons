@@ -1,6 +1,8 @@
 ARG BUILD_FROM
 FROM $BUILD_FROM
 
+ENV APP_ENV production
+
 ENV LANG C.UTF-8
 
 ENV BUILD_PACKAGES bash curl-dev ruby-dev build-base
