@@ -52,6 +52,8 @@ def authenticate_google(code: '')
     url = authorizer.get_authorization_url base_url: OOB_URI
     puts "Open the following URL in the browser and enter the " \
          "resulting code after authorization into the WebUI of this addon:\n" + url
+    puts "\nYou might need to replace the domain with the IP of your Home Assistant instance when opening the WebUI for the addon."
+    puts "It isn't recommended to expose this addon to the Internet."
   elsif credentials.nil?
     credentials = authorizer.get_and_store_credentials_from_code(
       user_id: user_id, code: code, base_url: OOB_URI
