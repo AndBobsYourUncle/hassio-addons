@@ -8,3 +8,8 @@ gem 'json'
 gem 'nexmo'
 gem 'rufus-scheduler'
 gem 'google-api-client'
+
+# DB
+gem 'sqlite3'
+gem 'activerecord'
+gem 'sinatra-activerecord'
