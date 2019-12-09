@@ -5,6 +5,7 @@ class CreatePackages < ActiveRecord::Migration[5.2]
       t.string :delivered_location
       t.datetime :delivery_from
       t.datetime :delivery_to
+      t.timestamps
     end
   end
 end

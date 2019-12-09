@@ -17,6 +17,8 @@ ActiveRecord::Schema.define(version: 2019_12_09_055556) do
     t.string "delivered_location"
     t.datetime "delivery_from"
     t.datetime "delivery_to"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
 end
