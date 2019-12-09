@@ -6,12 +6,7 @@ Bundler.require
 require 'sinatra'
 require 'rufus/scheduler'
 require 'rack/conneg'
-
-scheduler = Rufus::Scheduler.new
-
-scheduler.in '1s' do
-  authenticate_google
-end
+require 'sinatra/activerecord'
 
 require "google/apis/gmail_v1"
 require "googleauth"
@@ -62,9 +57,20 @@ def authenticate_google(code: '')
   credentials
 end
 
+scheduler = Rufus::Scheduler.new
+
+scheduler.in '1s' do
+  authenticate_google
+end
+
 configure do
   set :server, :puma # default to puma for performance
   set :bind, '0.0.0.0'
+  if Sinatra::Base.production?
+    set :database, "sqlite3:/data/usps-tracker.sqlite3"
+  else
+    set :database, "sqlite3:usps-tracker.sqlite3"
+  end
 end
 
 use(Rack::Conneg) { |conneg|

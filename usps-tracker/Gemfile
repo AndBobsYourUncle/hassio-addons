@@ -1,14 +1,18 @@
 source 'https://rubygems.org'
 
+gem 'rake'
+
 # Sinatra
 gem 'sinatra'
 gem 'puma'
 gem 'rack-conneg'
 gem 'json'
+
+# App configuration
 gem 'rufus-scheduler'
 gem 'google-api-client'
 
 # DB
 gem 'sqlite3'
-gem 'activerecord'
+gem 'activerecord', '~> 5.2'
 gem 'sinatra-activerecord'
