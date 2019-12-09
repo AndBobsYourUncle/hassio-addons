@@ -7,11 +7,11 @@ require 'sinatra'
 require 'rufus/scheduler'
 require 'rack/conneg'
 
-# scheduler = Rufus::Scheduler.new
+scheduler = Rufus::Scheduler.new
 
-# scheduler.every '2s' do
-#   puts 'heh heh'
-# end
+scheduler.in '1s' do
+  authenticate_google
+end
 
 require "google/apis/gmail_v1"
 require "googleauth"
@@ -71,8 +71,6 @@ use(Rack::Conneg) { |conneg|
   conneg.provide([:json])
 }
 
-GOOGLE_CREDENTIALS = authenticate_google
-
 get '/authenticate' do
   erb :authenticate
 end
@@ -86,7 +84,7 @@ end
 get '/test' do
   service = Google::Apis::GmailV1::GmailService.new
   service.client_options.application_name = APPLICATION_NAME
-  service.authorization = GOOGLE_CREDENTIALS
+  service.authorization = authenticate_google
 
   messages = service.list_user_messages("me", q: "from:auto-reply@usps.com after:1575750604").messages
 
