@@ -6,7 +6,7 @@ ENV APP_ENV production
 ENV LANG C.UTF-8
 
 ENV BUILD_PACKAGES bash curl-dev ruby-dev build-base
-ENV RUBY_PACKAGES ruby ruby-io-console ruby-bundler
+ENV RUBY_PACKAGES ruby ruby-io-console ruby-bundler sqlite-dev
 
 # Update and install all of the required packages.
 # At the end, remove the apk cache
