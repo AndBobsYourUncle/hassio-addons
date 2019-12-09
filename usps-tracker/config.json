@@ -11,7 +11,7 @@
   "ports": {
     "9005/tcp": 9005
   },
-  "webui": "http://[HOST]:[PORT:9005]/authenticate",
+  "webui": "http://[IP_ADDRESS]:[PORT:9005]/authenticate",
   "options": {
     "project_id": "google-project-id-123456789",
     "client_secrets": "usps-tracker-credentials.json"
