@@ -5,7 +5,6 @@ gem 'sinatra'
 gem 'puma'
 gem 'rack-conneg'
 gem 'json'
-gem 'nexmo'
 gem 'rufus-scheduler'
 gem 'google-api-client'
 
