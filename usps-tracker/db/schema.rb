@@ -13,7 +13,7 @@
 ActiveRecord::Schema.define(version: 2019_12_09_055556) do
 
   create_table "packages", force: :cascade do |t|
-    t.string "status"
+    t.integer "status"
     t.string "tracking_number"
     t.string "delivered_location"
     t.datetime "delivery_from"

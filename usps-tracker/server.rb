@@ -9,6 +9,7 @@ require 'sinatra'
 require 'rufus/scheduler'
 require 'rack/conneg'
 require 'sinatra/activerecord'
+require 'sinatra/jbuilder'
 
 require 'google/apis/gmail_v1'
 require 'googleauth'
@@ -86,12 +87,17 @@ post '/authenticate' do
   erb :authenticated
 end
 
+get '/packages' do
+	@packages = Package.all
+
+	jbuilder :package_index
+end
+
 get '/test' do
   service = Google::Apis::GmailV1::GmailService.new
   service.client_options.application_name = APPLICATION_NAME
   service.authorization = authenticate_google
 
-  puts "latest: #{Package.latest_timestamp}"
   latest_timestamp = Package.latest_timestamp
 
   query = 'from:auto-reply@usps.com'
@@ -101,9 +107,11 @@ get '/test' do
 
   return [200, { status: CREDENTIALS_PATH }.to_json] if messages.nil?
 
-  sorted_messages = messages.map do |message_info|
+  full_messages = messages.map do |message_info|
     service.get_user_message('me', message_info.id)
-  end.sort_by { |message| message.internal_date }
+  end
+
+  sorted_messages = full_messages.sort_by(&:internal_date)
 
   sorted_messages.each do |message|
     subject = message.payload.headers.find { |h| h.name == 'Subject' }.value
