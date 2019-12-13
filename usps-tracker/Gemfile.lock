@@ -15,6 +15,7 @@ GEM
     addressable (2.7.0)
       public_suffix (>= 2.0.2, < 5.0)
     arel (9.0.0)
+    chronic (0.10.2)
     concurrent-ruby (1.1.5)
     declarative (0.0.10)
     declarative-option (0.1.0)
@@ -95,6 +96,7 @@ PLATFORMS
 
 DEPENDENCIES
   activerecord (~> 5.2)
+  chronic
   google-api-client
   json
   puma

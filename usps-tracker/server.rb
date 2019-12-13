@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'rubygems'
 require 'bundler'
 
@@ -8,16 +10,14 @@ require 'rufus/scheduler'
 require 'rack/conneg'
 require 'sinatra/activerecord'
 
-require "google/apis/gmail_v1"
-require "googleauth"
-require "googleauth/stores/file_token_store"
-require "fileutils"
+require 'google/apis/gmail_v1'
+require 'googleauth'
+require 'googleauth/stores/file_token_store'
+require 'fileutils'
 
-OPTIONS_FILE = if Sinatra::Base.production?
-  '/data/options.json'
-else
-  'options.json'
-end
+require './models/package'
+
+OPTIONS_FILE = Sinatra::Base.production? ? '/data/options.json' : 'options.json'
 
 file = File.read(OPTIONS_FILE)
 OPTIONS = JSON.parse(file)
@@ -29,11 +29,7 @@ CREDENTIALS_PATH = OPTIONS['client_secrets'].freeze
 # The file token.yaml stores the user's access and refresh tokens, and is
 # created automatically when the authorization flow completes for the first
 # time.
-TOKEN_PATH = if Sinatra::Base.production?
-  "/data/token.yaml".freeze
-else
-  "token.yaml".freeze
-end
+TOKEN_PATH = Sinatra::Base.production? ? '/data/token.yaml' : 'token.yaml'
 
 SCOPE = Google::Apis::GmailV1::AUTH_GMAIL_READONLY
 
@@ -41,13 +37,14 @@ def authenticate_google(code: '')
   client_id = Google::Auth::ClientId.from_file CREDENTIALS_PATH
   token_store = Google::Auth::Stores::FileTokenStore.new file: TOKEN_PATH
   authorizer = Google::Auth::UserAuthorizer.new client_id, SCOPE, token_store
-  user_id = "default"
+  user_id = 'default'
   credentials = authorizer.get_credentials user_id
   if credentials.nil? && code.empty?
     url = authorizer.get_authorization_url base_url: OOB_URI
-    puts "Open the following URL in the browser and enter the " \
-         "resulting code after authorization into the WebUI of this addon:\n" + url
-    puts "\nYou might need to replace the domain with the IP of your Home Assistant instance when opening the WebUI for the addon."
+    puts 'Open the following URL in the browser and enter the ' \
+         'resulting code after authorization into the WebUI of the addon:' + url
+    puts "\nYou might need to replace the domain with the IP of your Home " \
+         ' Assistant instance when opening the WebUI for the addon.'
     puts "It isn't recommended to expose this addon to the Internet."
   elsif credentials.nil?
     credentials = authorizer.get_and_store_credentials_from_code(
@@ -67,17 +64,17 @@ configure do
   set :server, :puma # default to puma for performance
   set :bind, '0.0.0.0'
   if Sinatra::Base.production?
-    set :database, "sqlite3:/data/usps-tracker.sqlite3"
+    set :database, 'sqlite3:/data/usps-tracker.sqlite3'
   else
-    set :database, "sqlite3:usps-tracker.sqlite3"
+    set :database, 'sqlite3:usps-tracker.sqlite3'
   end
 end
 
-use(Rack::Conneg) { |conneg|
+use(Rack::Conneg) do |conneg|
   conneg.set :accept_all_extensions, false
   conneg.set :fallback, :json
   conneg.provide([:json])
-}
+end
 
 get '/authenticate' do
   erb :authenticate
@@ -94,13 +91,28 @@ get '/test' do
   service.client_options.application_name = APPLICATION_NAME
   service.authorization = authenticate_google
 
-  messages = service.list_user_messages("me", q: "from:auto-reply@usps.com after:1575750604").messages
+  puts "latest: #{Package.latest_timestamp}"
+  latest_timestamp = Package.latest_timestamp
 
-  message = service.get_user_message("me", messages.first.id)
+  query = 'from:auto-reply@usps.com'
+  query += " after:#{latest_timestamp}" if latest_timestamp.present?
 
-  subject = message.payload.headers.find { |header| header.name == 'Subject'}.value
+  messages = service.list_user_messages('me', q: query).messages
 
-  puts subject
+  return [200, { status: CREDENTIALS_PATH }.to_json] if messages.nil?
 
-  [200, {"status": CREDENTIALS_PATH}.to_json]
+  sorted_messages = messages.map do |message_info|
+    service.get_user_message('me', message_info.id)
+  end.sort_by { |message| message.internal_date }
+
+  sorted_messages.each do |message|
+    subject = message.payload.headers.find { |h| h.name == 'Subject' }.value
+
+    puts subject
+
+    package = Package.upsert_with_email_subject(subject)
+    puts package.inspect
+  end
+
+  [200, { status: CREDENTIALS_PATH }.to_json]
 end
