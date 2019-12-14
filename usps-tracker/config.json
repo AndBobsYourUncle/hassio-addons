@@ -14,11 +14,13 @@
   "webui": "http://[HOST]:[PORT:9005]/authenticate",
   "options": {
     "project_id": "google-project-id-123456789",
-    "client_secrets": "usps-tracker-credentials.json"
+    "client_secrets": "usps-tracker-credentials.json",
+    "earliest_fetch_time": "14 days ago"
   },
   "schema": {
     "project_id": "str",
-    "client_secrets": "str"
+    "client_secrets": "str",
+    "earliest_fetch_time": "str"
   },
   "image": "andbobsyouruncle/{arch}-usps-tracker"
 }

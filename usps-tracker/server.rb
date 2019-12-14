@@ -43,7 +43,7 @@ def authenticate_google(code: '')
   if credentials.nil? && code.empty?
     url = authorizer.get_authorization_url base_url: OOB_URI
     puts 'Open the following URL in the browser and enter the ' \
-         'resulting code after authorization into the WebUI of the addon:' + url
+         "resulting code after authorization into this addon's WebUI: " + url
     puts "\nYou might need to replace the domain with the IP of your Home " \
          ' Assistant instance when opening the WebUI for the addon.'
     puts "It isn't recommended to expose this addon to the Internet."
@@ -101,12 +101,20 @@ get '/test' do
   latest_timestamp = Package.latest_timestamp
 
   query = 'from:auto-reply@usps.com'
-  query += " after:#{latest_timestamp}" if latest_timestamp.present?
+
+  if latest_timestamp.nil?
+    latest_timestamp = Chronic.parse(OPTIONS['earliest_fetch_time']).to_i
+  end
+
+  query += " after:#{latest_timestamp}"
 
   logger.info 'Querying for latest messages...'
   messages = service.list_user_messages('me', q: query).messages
 
-  return [200, { status: CREDENTIALS_PATH }.to_json] if messages.nil?
+  if messages.nil?
+    logger.info 'No new messages found...'
+    return [200, { status: CREDENTIALS_PATH }.to_json]
+  end
 
   logger.info 'Getting full message bodies...'
   full_messages = messages.map do |message_info|
