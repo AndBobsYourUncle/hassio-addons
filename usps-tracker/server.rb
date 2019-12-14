@@ -138,21 +138,17 @@ end
 get '/packages' do
   @packages = Package.all
 
-  jbuilder :package_index
+  jbuilder :packages
 end
 
-get '/delivered_today_count' do
-  @package_count = Package.delivered.where(delivered_at: (Date.today.beginning_of_day..Date.today.end_of_day))
+get '/delivered_today' do
+  @packages = Package.delivered.where(delivered_at: (Date.today.beginning_of_day..Date.today.end_of_day))
 
-  puts @package_count.to_sql
-
-  @package_count = @package_count.count
-
-  jbuilder :delivered_today_count
+  jbuilder :packages
 end
 
-get '/enroute_count' do
-  @package_count = Package.enroute.count
+get '/enroute' do
+  @packages = Package.enroute
 
-  jbuilder :enroute_count
+  jbuilder :packages
 end
