@@ -15,6 +15,7 @@ require 'google/apis/gmail_v1'
 require 'googleauth'
 require 'googleauth/stores/file_token_store'
 require 'fileutils'
+require 'logger'
 
 require './models/package'
 
@@ -55,10 +56,57 @@ def authenticate_google(code: '')
   credentials
 end
 
+def fetch_new_messages
+  logger = Logger.new(STDOUT)
+
+  service = Google::Apis::GmailV1::GmailService.new
+  service.client_options.application_name = APPLICATION_NAME
+  service.authorization = authenticate_google
+
+  return unless authenticate_google.present?
+
+  latest_timestamp = Package.latest_timestamp
+
+  query = 'from:auto-reply@usps.com'
+
+  if latest_timestamp.nil?
+    latest_timestamp = Chronic.parse(OPTIONS['earliest_fetch_time']).to_i
+  end
+
+  query += " after:#{latest_timestamp}"
+
+  logger.info 'Querying for latest messages...'
+  messages = service.list_user_messages('me', q: query).messages
+
+  if messages.nil?
+    logger.info 'No new messages found...'
+    return
+  end
+
+  logger.info 'Getting full message bodies...'
+  full_messages = messages.map do |message_info|
+    service.get_user_message('me', message_info.id)
+  end
+
+  sorted_messages = full_messages.sort_by(&:internal_date)
+
+  sorted_messages.each do |message|
+    subject = message.payload.headers.find { |h| h.name == 'Subject' }.value
+    logger.info subject
+
+    package = Package.upsert_with_message(message)
+    logger.info package.inspect
+  end
+end
+
 scheduler = Rufus::Scheduler.new
 
 scheduler.in '1s' do
-  authenticate_google
+  fetch_new_messages
+end
+
+scheduler.every OPTIONS['fetch_interval'] do
+  fetch_new_messages
 end
 
 configure do
@@ -93,44 +141,18 @@ get '/packages' do
   jbuilder :package_index
 end
 
-get '/test' do
-  service = Google::Apis::GmailV1::GmailService.new
-  service.client_options.application_name = APPLICATION_NAME
-  service.authorization = authenticate_google
+get '/delivered_today_count' do
+  @package_count = Package.delivered.where(delivered_at: (Date.today.beginning_of_day..Date.today.end_of_day))
 
-  latest_timestamp = Package.latest_timestamp
+  puts @package_count.to_sql
 
-  query = 'from:auto-reply@usps.com'
+  @package_count = @package_count.count
 
-  if latest_timestamp.nil?
-    latest_timestamp = Chronic.parse(OPTIONS['earliest_fetch_time']).to_i
-  end
+  jbuilder :delivered_today_count
+end
 
-  query += " after:#{latest_timestamp}"
+get '/enroute_count' do
+  @package_count = Package.enroute.count
 
-  logger.info 'Querying for latest messages...'
-  messages = service.list_user_messages('me', q: query).messages
-
-  if messages.nil?
-    logger.info 'No new messages found...'
-    return [200, { status: CREDENTIALS_PATH }.to_json]
-  end
-
-  logger.info 'Getting full message bodies...'
-  full_messages = messages.map do |message_info|
-    service.get_user_message('me', message_info.id)
-  end
-
-  sorted_messages = full_messages.sort_by(&:internal_date)
-
-  sorted_messages.each do |message|
-    subject = message.payload.headers.find { |h| h.name == 'Subject' }.value
-
-    logger.info subject
-
-    package = Package.upsert_with_email_subject(subject)
-    logger.info package.inspect
-  end
-
-  [200, { status: CREDENTIALS_PATH }.to_json]
+  jbuilder :enroute_count
 end

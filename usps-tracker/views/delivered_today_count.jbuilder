@@ -1,0 +1,1 @@
+json.delivered_today_count @package_count

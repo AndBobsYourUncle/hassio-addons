@@ -14,10 +14,12 @@ ActiveRecord::Schema.define(version: 2019_12_09_055556) do
 
   create_table "packages", force: :cascade do |t|
     t.integer "status"
+    t.string "latest_message_subject"
     t.string "tracking_number"
     t.string "delivered_location"
     t.datetime "delivery_from"
     t.datetime "delivery_to"
+    t.datetime "delivered_at"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end

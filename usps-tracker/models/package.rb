@@ -17,7 +17,9 @@ class Package < ActiveRecord::Base
     self.order(updated_at: :desc).first&.updated_at&.to_i
   end
 
-  def self.upsert_with_email_subject(subject)
+  def self.upsert_with_message(message)
+    subject = subject_from_message(message)
+
     subject_parts = subject.match(/(Item Delivered, |Expected Delivery)([\w ,:\/]*?)(\d+$)/)
 
     raise InvalidSubject unless subject_parts.length == 4
@@ -38,9 +40,11 @@ class Package < ActiveRecord::Base
     case status
     when :enroute
       location = nil
+      delivered_at = nil
       from_date, to_date = extract_times(location_or_time)
     when :delivered
       location = location_or_time.strip
+      delivered_at = internal_date_from_message(message)
       from_date = nil
       to_date = nil
     end
@@ -48,10 +52,12 @@ class Package < ActiveRecord::Base
     package = self.find_or_create_by(tracking_number: tracking_number)
     package.update!(
       status: status,
+      latest_message_subject: subject,
       tracking_number: tracking_number,
       delivered_location: location,
       delivery_from: from_date,
-      delivery_to: to_date
+      delivery_to: to_date,
+      delivered_at: delivered_at
     )
     package
   end
@@ -86,5 +92,13 @@ class Package < ActiveRecord::Base
     end
 
     [from_date, to_date]
+  end
+
+  private_class_method def self.internal_date_from_message(message)
+    Time.at(message.internal_date.to_s[0..9].to_i)
+  end
+
+  private_class_method def self.subject_from_message(message)
+    message.payload.headers.find { |h| h.name == 'Subject' }.value
   end
 end

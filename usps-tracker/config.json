@@ -15,12 +15,14 @@
   "options": {
     "project_id": "google-project-id-123456789",
     "client_secrets": "usps-tracker-credentials.json",
-    "earliest_fetch_time": "14 days ago"
+    "earliest_fetch_time": "14 days ago",
+    "fetch_interval": "1h"
   },
   "schema": {
     "project_id": "str",
     "client_secrets": "str",
-    "earliest_fetch_time": "str"
+    "earliest_fetch_time": "str",
+    "fetch_interval": "str"
   },
   "image": "andbobsyouruncle/{arch}-usps-tracker"
 }
