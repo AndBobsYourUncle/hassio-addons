@@ -27,7 +27,7 @@ OPTIONS = JSON.parse(file)
 OOB_URI = 'urn:ietf:wg:oauth:2.0:oob'
 
 APPLICATION_NAME = OPTIONS['project_id'].freeze
-CREDENTIALS_PATH = "#{Sinatra::Base.production? ? "/data/" : ""}#{OPTIONS['client_secrets']}"
+CREDENTIALS_PATH = "#{Sinatra::Base.production? ? "/share/" : ""}#{OPTIONS['client_secrets']}"
 # The file token.yaml stores the user's access and refresh tokens, and is
 # created automatically when the authorization flow completes for the first
 # time.
