@@ -88,9 +88,9 @@ post '/authenticate' do
 end
 
 get '/packages' do
-	@packages = Package.all
+  @packages = Package.all
 
-	jbuilder :package_index
+  jbuilder :package_index
 end
 
 get '/test' do
@@ -103,10 +103,12 @@ get '/test' do
   query = 'from:auto-reply@usps.com'
   query += " after:#{latest_timestamp}" if latest_timestamp.present?
 
+  logger.info 'Querying for latest messages...'
   messages = service.list_user_messages('me', q: query).messages
 
   return [200, { status: CREDENTIALS_PATH }.to_json] if messages.nil?
 
+  logger.info 'Getting full message bodies...'
   full_messages = messages.map do |message_info|
     service.get_user_message('me', message_info.id)
   end
@@ -116,10 +118,10 @@ get '/test' do
   sorted_messages.each do |message|
     subject = message.payload.headers.find { |h| h.name == 'Subject' }.value
 
-    puts subject
+    logger.info subject
 
     package = Package.upsert_with_email_subject(subject)
-    puts package.inspect
+    logger.info package.inspect
   end
 
   [200, { status: CREDENTIALS_PATH }.to_json]

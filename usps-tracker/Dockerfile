@@ -27,4 +27,4 @@ RUN bundle install
 
 COPY . /usr/app
 
-CMD [ "bundle", "exec", "ruby", "server.rb", "-p", "9005" ]
+CMD [ "/usr/app/run.sh" ]
