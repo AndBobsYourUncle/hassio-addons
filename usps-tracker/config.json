@@ -3,7 +3,7 @@
   "version": "0.0.1",
   "slug": "usps-tracker",
   "description": "This addon spins up a simple Ruby server that logs in and downloads emails from the USPS Informed Delivery service, and manages a list of incoming packages.",
-  "arch": ["amd64"],
+  "arch": ["armhf", "armv7", "aarch64", "amd64", "i386"],
   "map": ["share"],
   "startup": "before",
   "boot": "auto",
