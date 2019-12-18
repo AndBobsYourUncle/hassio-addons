@@ -147,6 +147,12 @@ get '/delivered_today' do
   jbuilder :packages
 end
 
+get '/enroute_today' do
+  @packages = Package.enroute.where(delivery_from: (Date.today.beginning_of_day..Date.today.end_of_day)).or(Package.where(delivery_to: (Date.today.beginning_of_day..Date.today.end_of_day)))
+
+  jbuilder :packages
+end
+
 get '/enroute' do
   @packages = Package.enroute
 
