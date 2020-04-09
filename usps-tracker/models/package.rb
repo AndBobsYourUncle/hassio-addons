@@ -41,7 +41,11 @@ class Package < ActiveRecord::Base
     when :enroute
       location = nil
       delivered_at = nil
-      from_date, to_date = extract_times(location_or_time)
+      from_date, to_date = begin
+        extract_times(location_or_time)
+      rescue InvalidTime
+        [nil, nil]
+      end
     when :delivered
       location = location_or_time.strip
       delivered_at = internal_date_from_message(message)
