@@ -94,7 +94,12 @@ def fetch_new_messages
     subject = message.payload.headers.find { |h| h.name == 'Subject' }.value
     logger.info subject
 
-    package = Package.upsert_with_message(message)
+    begin
+      package = Package.upsert_with_message(message)
+    rescue Package::InvalidSubject, Package::InvalidType, Package::InvalidTime => e
+      puts "Caught error parsing message: #{e}"
+    end
+
     logger.info package.inspect
   end
 end
@@ -155,6 +160,12 @@ end
 
 get '/enroute' do
   @packages = Package.enroute
+
+  jbuilder :packages
+end
+
+get '/ready_for_pickup_today' do
+  @packages = Package.ready_for_pickup.where(delivered_at: (Date.today.beginning_of_day..Date.today.end_of_day))
 
   jbuilder :packages
 end

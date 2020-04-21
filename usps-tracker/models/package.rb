@@ -11,7 +11,7 @@ class Package < ActiveRecord::Base
   class InvalidTime < StandardError
   end
 
-  enum status: { enroute: 0, delivered: 1 }
+  enum status: { enroute: 0, delivered: 1, ready_for_pickup: 2 }
 
   def self.latest_timestamp
     self.order(updated_at: :desc).first&.updated_at&.to_i
@@ -20,9 +20,9 @@ class Package < ActiveRecord::Base
   def self.upsert_with_message(message)
     subject = subject_from_message(message)
 
-    subject_parts = subject.match(/(Item Delivered, |Expected Delivery)([\w ,:\/]*?)(\d+$)/)
+    subject_parts = subject.match(/(Item Delivered, |Expected Delivery|Ready for Pickup)([\w ,:\/]*?)(\d+$)/)
 
-    raise InvalidSubject unless subject_parts.length == 4
+    raise InvalidSubject unless subject_parts != nil && subject_parts.length == 4
 
     type = subject_parts[1]
     location_or_time = subject_parts[2]
@@ -33,6 +33,8 @@ class Package < ActiveRecord::Base
       status = :delivered
     when 'Expected Delivery'
       status = :enroute
+    when 'Ready for Pickup'
+      status = :ready_for_pickup
     else
       raise InvalidType
     end
@@ -48,6 +50,11 @@ class Package < ActiveRecord::Base
       end
     when :delivered
       location = location_or_time.strip
+      delivered_at = internal_date_from_message(message)
+      from_date = nil
+      to_date = nil
+    when :ready_for_pickup
+      location = 'Pickup Location'
       delivered_at = internal_date_from_message(message)
       from_date = nil
       to_date = nil
