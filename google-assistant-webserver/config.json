@@ -6,7 +6,7 @@
   "url": "https://github.com/AndBobsYourUncle/hassio-addons/",
   "startup": "application",
   "boot": "auto",
-  "arch": ["armhf", "amd64"],
+  "arch": ["arm64", "armhf", "amd64"],
   "map": ["share"],
   "devices": ["/dev/snd:/dev/snd:rwm"],
   "ports": {
