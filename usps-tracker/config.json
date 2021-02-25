@@ -5,7 +5,7 @@
   "description": "This addon spins up a simple Ruby server that logs in and downloads emails from the USPS Informed Delivery service, and manages a list of incoming packages.",
   "arch": ["armhf", "armv7", "aarch64", "amd64", "i386"],
   "map": ["share"],
-  "startup": "before",
+  "startup": "application",
   "boot": "auto",
   "options": {},
   "schema": {},
