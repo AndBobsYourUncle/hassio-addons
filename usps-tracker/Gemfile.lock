@@ -92,7 +92,7 @@ GEM
     tilt-jbuilder (0.7.1)
       jbuilder
       tilt (>= 1.3.0, < 3)
-    tzinfo (1.2.5)
+    tzinfo (1.2.10)
       thread_safe (~> 0.1)
     uber (0.1.0)
 
