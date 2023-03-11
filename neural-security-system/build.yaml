@@ -1,7 +1,0 @@
-build_from:
-  amd64: "openvino/ubuntu20_dev:2022.1.0"
-labels:
-  org.opencontainers.image.title: "Home Assistant Add-on: MQTT Neural System"
-  org.opencontainers.image.description: "An OpenVINO powered Home Assistant addon for monitoring cameras."
-  org.opencontainers.image.source: "https://github.com/AndBobsYourUncle/neural_security_system"
-  org.opencontainers.image.licenses: "Apache License 2.0"
