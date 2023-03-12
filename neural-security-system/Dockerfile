@@ -95,15 +95,13 @@ WORKDIR /home/openvino
 RUN omz_downloader --name yolo-v3-tiny-tf && \
     omz_converter --name yolo-v3-tiny-tf
 
-ARG CACHEBUST=1
-
-RUN git clone https://github.com/AndBobsYourUncle/mqtt_neural_system.git
+RUN git clone https://github.com/AndBobsYourUncle/mqtt_neural_system.git && \
+    cd mqtt_neural_system; \
+    git checkout finish && cmake . && make
 
 WORKDIR /home/openvino/mqtt_neural_system
 
-RUN git checkout finish && cmake . && make
-
-USER openvino
+USER root
 
 RUN chmod +x /home/openvino/mqtt_neural_system/start_neural_security_system.sh
 

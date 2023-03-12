@@ -10,18 +10,19 @@
   "options": {
     "yolo_v3_model_path": "../public/yolo-v3-tiny-tf/FP16/yolo-v3-tiny-tf.xml",
     "device": "CPU",
-    "mqtt_host": "tcp://localhost:1883",
+    "mqtt_host": "tcp://MQTT_IP_ADDRESS:1883",
     "mqtt_user": "MQTT_USER",
     "mqtt_password": "MQTT_PASSWORD",
     "tracked_classes": ["person"],
+    "detection_threshold": 0.7,
     "cameras": [
       {
         "name": "Front Door",
-        "input": "http://192.168.1.51:8081"
+        "input": "http://CAMERA_IP_ADDRESS:CAMERA_PORT"
       },
       {
         "name": "Driveway",
-        "input": "http://192.168.1.51:8082"
+        "input": "http://CAMERA_IP_ADDRESS:CAMERA_PORT"
       }
     ]
   },
