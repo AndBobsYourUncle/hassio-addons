@@ -7,7 +7,7 @@
   "startup": "application",
   "boot": "auto",
   "usb": true,
-  "ports": "8080/tcp: 8085",
+  "ports": "8085/tcp: 8080",
   "options": {
     "yolo_v3_model_path": "../public/yolo-v3-tiny-tf/FP16/yolo-v3-tiny-tf.xml",
     "device": "CPU",
