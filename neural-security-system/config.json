@@ -1,7 +1,7 @@
 {
-  "name": "Neural Security System",
+  "name": "MQTT Neural Cameras",
   "version": "0.0.1",
-  "slug": "neural-security-system",
+  "slug": "mqtt-neural-cameras",
   "description": "Uses Intel OpenVINO to monitor camera streams, and publishes confidence and area measurements for tracked classes.",
   "arch": ["amd64"],
   "startup": "application",
@@ -41,5 +41,5 @@
       { "name": "str", "input": "str" }
     ]
   },
-  "image": "andbobsyouruncle/{arch}-neural-security-system"
+  "image": "andbobsyouruncle/{arch}-mqtt-neural-cameras"
 }
