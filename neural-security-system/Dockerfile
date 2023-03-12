@@ -97,7 +97,7 @@ RUN omz_downloader --name yolo-v3-tiny-tf && \
 
 RUN git clone https://github.com/AndBobsYourUncle/mqtt_neural_system.git && \
     cd mqtt_neural_system; \
-    git checkout finish && cmake . && make
+    git checkout finish2 && cmake . && make
 
 WORKDIR /home/openvino/mqtt_neural_system
 
