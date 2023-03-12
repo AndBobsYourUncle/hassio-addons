@@ -3,6 +3,7 @@
   "version": "0.0.1",
   "slug": "mqtt-neural-cameras",
   "description": "Uses Intel OpenVINO to monitor camera streams, and publishes confidence and area measurements for tracked classes.",
+  "url": "https://github.com/AndBobsYourUncle/mqtt_neural_cameras",
   "arch": ["amd64"],
   "startup": "application",
   "boot": "auto",
