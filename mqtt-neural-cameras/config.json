@@ -8,6 +8,7 @@
   "startup": "application",
   "boot": "auto",
   "usb": true,
+  "devices": [ "/dev/dri" ],
   "ports": {
     "8080/tcp": 8085
   },
