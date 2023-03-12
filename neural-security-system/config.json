@@ -33,6 +33,7 @@
     "mqtt_user": "str",
     "mqtt_password": "str",
     "tracked_classes": ["str"],
+    "detection_threshold": "float",
     "cameras": [
       { "name": "str", "input": "str" }
     ]
