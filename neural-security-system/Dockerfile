@@ -3,7 +3,8 @@ FROM openvino/ubuntu20_dev:2022.1.0
 USER root
 
 RUN apt-get update; \
-    apt-get install pkg-config -y --no-install-recommends; \
+    apt-get install pkg-config software-properties-common -y --no-install-recommends; \
+    add-apt-repository ppa:rmescandon/yq; \
     apt-get install -y --no-install-recommends \
         git \
         wget \
@@ -15,7 +16,8 @@ RUN apt-get update; \
         libgstreamer1.0-dev libgstreamer-plugins-base1.0-dev \
         libdc1394-22-dev \
         libgtk2.0-dev libgtk-3-dev gnome-devel \
-        libcanberra-gtk-module libcanberra-gtk3-module && \
+        libcanberra-gtk-module libcanberra-gtk3-module \
+        yq && \
     rm -rf /var/lib/apt/lists/*
 
 ENV NO_AT_BRIDGE=1
@@ -93,10 +95,16 @@ WORKDIR /home/openvino
 RUN omz_downloader --name yolo-v3-tiny-tf && \
     omz_converter --name yolo-v3-tiny-tf
 
+ARG CACHEBUST=1
+
 RUN git clone https://github.com/AndBobsYourUncle/mqtt_neural_system.git
 
 WORKDIR /home/openvino/mqtt_neural_system
 
-RUN git checkout finish
+RUN git checkout finish && cmake . && make
 
-RUN cmake . && make
+USER openvino
+
+RUN chmod +x /home/openvino/mqtt_neural_system/start_neural_security_system.sh
+
+CMD [ "/bin/bash", "-c", "/home/openvino/mqtt_neural_system/start_neural_security_system.sh" ]
