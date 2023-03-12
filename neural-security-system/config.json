@@ -1,0 +1,41 @@
+{
+  "name": "Neural Security System",
+  "version": "0.0.1",
+  "slug": "neural-security-system",
+  "description": "Uses Intel OpenVINO to monitor camera streams, and publishes confidence and area measurements for tracked classes.",
+  "arch": ["amd64"],
+  "startup": "application",
+  "boot": "auto",
+  "usb": true,
+  "options": {
+    "yolo_v3_model_path": "../public/yolo-v3-tiny-tf/FP16/yolo-v3-tiny-tf.xml",
+    "device": "CPU",
+    "mqtt_host": "tcp://MQTT_IP_ADDRESS:1883",
+    "mqtt_user": "MQTT_USER",
+    "mqtt_password": "MQTT_PASSWORD",
+    "tracked_classes": ["person"],
+    "detection_threshold": 0.7,
+    "cameras": [
+      {
+        "name": "Front Door",
+        "input": "http://CAMERA_IP_ADDRESS:CAMERA_PORT"
+      },
+      {
+        "name": "Driveway",
+        "input": "http://CAMERA_IP_ADDRESS:CAMERA_PORT"
+      }
+    ]
+  },
+  "schema": {
+    "yolo_v3_model_path": "str",
+    "device": "str",
+    "mqtt_host": "str",
+    "mqtt_user": "str",
+    "mqtt_password": "str",
+    "tracked_classes": ["str"],
+    "cameras": [
+      { "name": "str", "input": "str" }
+    ]
+  },
+  "image": "andbobsyouruncle/{arch}-neural-security-system"
+}
