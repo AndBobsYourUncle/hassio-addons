@@ -14,7 +14,7 @@ gem 'google-api-client'
 
 # DB
 gem 'sqlite3'
-gem 'activerecord', '~> 5.2'
+gem 'activerecord', '~> 6.1'
 gem 'sinatra-activerecord'
 gem "tilt-jbuilder", ">= 0.4.0", :require => "sinatra/jbuilder"
 
